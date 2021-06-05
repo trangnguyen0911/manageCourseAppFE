@@ -1,0 +1,4 @@
+export const ADD_USER_REQUEST = "ADD_USER_REQUEST";
+export const EDIT_USER_REQUEST = "EDIT_USER_REQUEST";
+export const USER_SUCCESS = "USER_SUCCESS";
+export const USER_FAILURE = "USER_FAILURE";

@@ -1,13 +1,140 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import '~antd/dist/antd.css';
+
+.App {
+  text-align: left;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+#components-layout-demo-top-side-2 .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ant-row-rtl #components-layout-demo-top-side-2 .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.site-layout-background {
+  background: #D1E8E2;
+}
+
+.menu {
+  background-color: #D9B08C;
+}
+
+.ant-menu-sub.ant-menu-inline {
+  background-color: #FFCB9A;
+}
+
+.headerComponent {
+  text-align: left;
+  margin: 0;
+}
+
+.home {
+  font-size: 40px;
+}
+
+.form-log-in {
+  width: 40%;
+  margin: auto;
+}
+
+.form-style {
+ width: 60%;
+ margin: auto; 
+}
+
+/* .ant-layout-has-sider {
+  margin-top: 4.5%;
+} */
+
+.btn-reset {
+  background: black;
+  color: #fff;
+  margin-left: 2px;
+}
+
+.img-fluid {
+  width: 90%;
+  height: auto;
+}
+
+.form-error {
+  color:red;
+  margin-left: 240px;
+} 
+
+/* .form-required label:after {
+  content:" *";
+  color: red;
+  margin-bottom: 10px !important;
+}  */
+
+.form-required {
+  margin-bottom: 10px !important;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center
+}
+
+.ant-table-thead > tr > th {
+  text-align: center;
+}
+
+.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: '';
+}
+
+.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
+  content: '*';
+  color: red;
+}
+
+.ant-table-tbody > tr > td {
+  overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.site-card-border-less-wrapper {
+  padding: 30px;
+  background: #ececec;
+  margin: auto;
+  width: 70%;
+}
+
+.ant-card {
+  margin: auto;
+}
+
+.ant-card-head-title {
+  text-align: center;
+  font-size: 30px
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-item, .ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  background: none;
+}
+
+.wrap-text {
+  word-wrap: break-word;
+}
+
+.ant-btn-group ant-dropdown-button {
+  float: right;
+  margin-right: 0;
+}
+
+.ant-dropdown-button button{
+  margin-right: 0;
+  width: 100px;
 }
