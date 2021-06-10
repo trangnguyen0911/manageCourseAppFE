@@ -1,12 +1,26 @@
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router';
-import AuthenticationService from '../authen/AuthenticationService.js'
+import AuthenticationService from '../../../core/sercurity/AuthenticationService.js'
 import { Menu, Layout } from 'antd';
 import { BarsOutlined, UserOutlined, BookOutlined } from '@ant-design/icons';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
+/** 
+ * Menu in sidebar
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
+ */
 const MenuComponent: React.FC = () => {
     const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
     const isAdminLoggedIn = AuthenticationService.isAdminLoggedIn();
@@ -20,8 +34,8 @@ const MenuComponent: React.FC = () => {
                 className="site-layout-background">
                 <Menu className="menu"
                     mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
+                    // defaultSelectedKeys={['1']}
+                    // defaultOpenKeys={['sub1']}
                     style={{ height: '100%', borderRight: 0 }}
                 >
                     <SubMenu key="sub1" icon={<UserOutlined />} title="User Information">

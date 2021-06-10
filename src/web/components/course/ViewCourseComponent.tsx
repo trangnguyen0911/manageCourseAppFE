@@ -5,8 +5,19 @@ import AuthenticationService from '../authen/AuthenticationService.js'
 import { ICourse } from '../../../core/course/types'
 import { registerCourseRequest } from '../../../core/course/actions'
 
-/**
- * Add information form, handle add usertodo api
+/** 
+ * View course form
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
  */
 const ViewCourseComponent: React.FC<ICourse> = (props) => {
     const dispatch = useDispatch();
@@ -14,7 +25,10 @@ const ViewCourseComponent: React.FC<ICourse> = (props) => {
     const history = useHistory();
     const temp: any = location.state;
 
-    // call api to register course
+    /**
+     * handle register course
+     * @param courseID 
+     */
     const onRegister = (courseID: Number) => {
         const username = AuthenticationService.getLoggedInUserName()
         dispatch(registerCourseRequest(username, courseID));

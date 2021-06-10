@@ -1,5 +1,8 @@
 import * as ActionTypes from "./actionTypes";
 
+/**
+ * define registercourse type
+ */
 export interface IRegisterCourse {
     courseID: number
     studentID: number
@@ -12,6 +15,9 @@ export interface IRegisterCourse {
     registerDate: string
 }
 
+/**
+ * define registercourse state
+ */
 export interface RegisterCourseState {
     pending: boolean;
     registerCourses: IRegisterCourse[];
@@ -35,24 +41,39 @@ export interface ConfirmExistRegisterCourseRequest {
     registerCourse: IRegisterCourse
 }
 
+/**
+ * register course success payload
+ */
 export interface RegisterCourseSuccessPayload {
     message: string
 }
 
+/**
+ * register course failure payload
+ */
 export interface RegisterCourseFailurePayload {
     error: string;
 }
 
+/**
+ * register course success
+ */
 export type RegisterCourseSuccess = {
     type: typeof ActionTypes.REGISTER_COURSE_SUCCESS;
     payload: RegisterCourseSuccessPayload;
 };
 
+/**
+ * register course failure
+ */
 export type RegisterCourseFailure = {
     type: typeof ActionTypes.REGISTER_COURSE_FAILURE;
     payload: RegisterCourseFailurePayload;
 };
 
+/**
+ * fetch register course success payload
+ */
 export interface FetchRegisterCourseSuccessPayload {
     registerCourses: IRegisterCourse[];
 }
@@ -72,6 +93,9 @@ export interface FetchRegisterCourseRequest {
     contentSearch: string;
 }
 
+/**
+ * fetch register course failure payload
+ */
 export interface FetchRegisterCourseFailurePayload {
     error: string;
 }
@@ -94,16 +118,25 @@ export interface FetchSearchRegisterCourseByUserNameRequest {
     username: string;
 }
 
+/**
+ * fetch register course success
+ */
 export type FetchRegisterCourseSuccess = {
     type: typeof ActionTypes.FETCH_REGISTER_COURSE_SUCCESS;
     payload: FetchRegisterCourseSuccessPayload;
 };
 
+/**
+ * fetch register course failure
+ */
 export type FetchRegisterCourseFailure = {
     type: typeof ActionTypes.FETCH_REGISTER_COURSE_FAILURE;
     payload: FetchRegisterCourseFailurePayload;
 };
 
+/**
+ * export type registercourse actions
+ */
 export type RegisterCourseActions =
     | FetchRegisterCourseRequest
     | FetchSearchRegisterCourseRequest

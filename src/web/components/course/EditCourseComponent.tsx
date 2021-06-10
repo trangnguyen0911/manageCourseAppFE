@@ -6,11 +6,21 @@ import * as constant from '../../utils/Constant';
 import { useDispatch} from "react-redux";
 import { editCourseRequest } from '../../../core/course/actions'
 
-
 const { Title } = Typography;
 
-/**
- * Add information form, handle add usertodo api
+/** 
+ * Edit course form
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
  */
 const EditCourseComponent: React.FC<ICourse> = (props) => {
     const dispatch = useDispatch();
@@ -18,8 +28,17 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
     const history = useHistory();
     const [form] = Form.useForm();
     const temp: any = location.state;
+    let courseNameRef: any = null;
+    let instructorEmailRef: any = null;
+    let descriptionRef: any = null;
+    let durationRef: any = null;
+    let feeRef: any = null;
 
+    /**
+     * focus on first input
+     */
     useEffect(() => {
+        courseNameRef.focus()
         form.setFieldsValue(temp.course)
     }, [location]);
 
@@ -47,6 +66,10 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
         },
     };
 
+    /**
+     * handle edit course when valid input
+     * @param values 
+     */
     const onFinish = (values: any) => {
         const course: ICourse = {
             courseID: temp.course.courseID,
@@ -60,15 +83,36 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
         dispatch(editCourseRequest(course));
     }
 
+    /**
+     * handle invalid input when submit
+     * @param errorInfo 
+     */
+     const onFinishFailed = (errorInfo: any) => {
+        const firstErrorField: any = errorInfo.errorFields[0].name[0] 
+        
+        if(firstErrorField ===  "courseName"){
+            courseNameRef.focus()
+        } else if (firstErrorField === "instructorEmail") {
+            instructorEmailRef.focus()
+        } else if (firstErrorField === "description") {
+            descriptionRef.focus()
+        } else if (firstErrorField === "duration") {
+            durationRef.focus()
+        } else {
+            feeRef.focus()
+        }
+    };
+
     return (
         <Form className="form-style"
             {...formItemLayout}
             form={form}
             name="basic"
             onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
             validateMessages={constant.validateMessages}
         >
-            <Title style={{ textAlign: 'center' }} level={3}>ADD NEW COURSE</Title>
+            <Title style={{ textAlign: 'center' }} level={3}>EDIT COURSE</Title>
             <Form.Item style={{ marginTop: '20px' }} className="form-required"
                 labelAlign='left'
                 label="Course Name"
@@ -76,7 +120,7 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
                 rules={[{ required: true},
                 { pattern: new RegExp(/^\s*\S.{0,49}\s*$/), message: constant.validateMaxLength("Course Name", 50) }]}
             >
-                <Input />
+                <Input ref={input => { courseNameRef = input }}/>
             </Form.Item>
 
             <Form.Item className="form-required"
@@ -85,7 +129,7 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
                 name="instructorEmail"
                 rules={[{ required: true}, { type: 'email'}]}
             >
-                <Input />
+                <Input ref={input => { instructorEmailRef = input }} />
             </Form.Item>
 
             <Form.Item className="form-required"
@@ -94,7 +138,7 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
                 name="duration"
                 rules={[{ required: true}, { type: 'number', min: 1, max: 300 }]}
             >
-                <InputNumber style={{ width: '20%' }} />
+                <InputNumber style={{ width: '20%' }} ref={input => {durationRef = input }} />
             </Form.Item>
 
             <Form.Item className="form-required"
@@ -103,7 +147,7 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
                 name="fee"
                 rules={[{ required: true}, { type: 'number', min: 0, max: 5000}]}
             >
-                <InputNumber style={{ width: '20%' }}
+                <InputNumber style={{ width: '20%' }} ref={input => {feeRef = input }}
                             formatter={(value: any)=> `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             parser={(value: any) => value.replace(/\$\s?|(,*)/g, '')}/>
             </Form.Item>
@@ -115,11 +159,11 @@ const EditCourseComponent: React.FC<ICourse> = (props) => {
                 rules={[{ required: true},
                 { pattern: new RegExp(/^\s*\S.{0,199}\s*$/), message: constant.validateMaxLength('Description', 200)}]}
             >
-                <Input.TextArea />
+                <Input.TextArea showCount maxLength={200} ref={input => {descriptionRef = input }} />
             </Form.Item>
 
             <Form.Item {...tailFormItemLayout} style={{marginTop: '20px'}}>
-                <Popconfirm placement="top" title={"When you click Yes, the current data will be lost if you haven't update yet. Are you sure to back to the list?"} onConfirm={ () =>  history.push("/admin/courses/all")} okText="Yes" cancelText="No">
+                <Popconfirm placement="top" title={constant.backMessage} onConfirm={ () =>  history.push("/admin/courses/all")} okText="Yes" cancelText="No">
                     <Button htmlType="button" style={{ background: '#116466', color: 'white', marginRight:'2px' }} >Back</Button>
                 </Popconfirm>
                 <Button type="primary" htmlType="submit">Edit Course</Button>

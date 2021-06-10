@@ -94,7 +94,7 @@ function* cancelRegisterCourseSaga(action: any): any {
     const response = yield call(RegisterCourseAPI.cancelRegisterCourseAPI, action.username, action.registerCourse);
     const data = response.data
     if (data === "Err01") {
-      message.error(constant.ERR01, 5)
+      message.error(constant.ERR01_REGISTER_COURSE, 5)
     } else if (data === "NoErr") {
       message.success(constant.NOERR_CANCEL, 5)
     }
@@ -110,14 +110,13 @@ function* cancelRegisterCourseSaga(action: any): any {
 
 /*
   Starts worker saga on latest dispatched action.
-  Allows concurrent increments.
 */
 function* courseSaga() {
   yield all([takeLatest(ActionTypes.FETCH_REGISTER_COURSE_REQUEST, fetchRegisterCourseSaga),
-  takeLatest(ActionTypes.FETCH_SEARCH_REGISTER_COURSE_REQUEST, fetchSearchRegisterCourseSaga),
-  takeLatest(ActionTypes.FETCH_REGISTER_COURSE_BY_USER_NAME_REQUEST, fetchRegisterCourseByUserNameSaga),
-  takeLatest(ActionTypes.FETCH_SEARCH_REGISTER_COURSE_BY_USER_NAME_REQUEST, fetchSearchRegisterCourseByUserNameSaga),
-  takeEvery(ActionTypes.CANCEL_REGISTER_COURSE_REQUEST, cancelRegisterCourseSaga)]);
+      takeLatest(ActionTypes.FETCH_SEARCH_REGISTER_COURSE_REQUEST, fetchSearchRegisterCourseSaga),
+      takeLatest(ActionTypes.FETCH_REGISTER_COURSE_BY_USER_NAME_REQUEST, fetchRegisterCourseByUserNameSaga),
+      takeLatest(ActionTypes.FETCH_SEARCH_REGISTER_COURSE_BY_USER_NAME_REQUEST, fetchSearchRegisterCourseByUserNameSaga),
+      takeEvery(ActionTypes.CANCEL_REGISTER_COURSE_REQUEST, cancelRegisterCourseSaga)]);
 }
 
 export default courseSaga;

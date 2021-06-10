@@ -6,7 +6,18 @@ import { cancelRegisterCourseRequest } from '../../../core/registerCourse/action
 import AuthenticationService from '../authen/AuthenticationService.js'
 
 /**
- * Add information form, handle add usertodo api
+ * ViewRegisterCourseRoleAdminComponent
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
  */
 const ViewRegisterCourseRoleAdminComponent: React.FC<IRegisterCourse> = (props) => {
     const dispatch = useDispatch();
@@ -14,6 +25,10 @@ const ViewRegisterCourseRoleAdminComponent: React.FC<IRegisterCourse> = (props) 
     const history = useHistory();
     const temp: any = location.state;
 
+    /**
+     * handle cancel register course
+     * @param registerCourse
+     */
     const onCancelRegister = (registerCourse: IRegisterCourse) => {
         const username = AuthenticationService.getLoggedInUserName()
         dispatch(cancelRegisterCourseRequest(username, registerCourse));

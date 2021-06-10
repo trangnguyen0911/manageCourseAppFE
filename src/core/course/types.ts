@@ -1,5 +1,8 @@
 import * as ActionTypes from "./actionTypes";
 
+/**
+ * define course type
+ */
 export interface ICourse {
     courseID?: number
     courseName: string
@@ -10,10 +13,14 @@ export interface ICourse {
     status: number
 }
 
+/**
+ * define course state
+ */
 export interface CourseState {
     pending: boolean;
     courses: ICourse[];
     error: string | null;
+    confirm: string;
 }
 
 /**
@@ -50,61 +57,91 @@ export interface ConfirmExistCourseRequest {
 }
 
 /**
- * add course
+ * course success payload
  */
 export interface CourseSuccessPayload {
-    message: string
+    confirm: string;
 }
 
+/**
+ * course failure payload
+ */
 export interface CourseFailurePayload {
     error: string;
 }
 
+/**
+ * add course request
+ */
 export interface AddCourseRequest {
     type: typeof ActionTypes.ADD_COURSE_REQUEST;
     course: ICourse
 }
 
+/**
+ * course success
+ */
 export type CourseSuccess = {
     type: typeof ActionTypes.COURSE_SUCCESS;
     payload: CourseSuccessPayload;
 };
 
+/**
+ * course failure
+ */
 export type CourseFailure = {
     type: typeof ActionTypes.COURSE_FAILURE;
     payload: CourseFailurePayload;
 };
 
 /**
- * fetch courses
+ * fetch courses success payload
  */
 export interface FetchCourseSuccessPayload {
     courses: ICourse[];
 }
 
+/**
+ * fetch course failure payload
+ */
 export interface FetchCourseFailurePayload {
     error: string;
 }
 
+/**
+ * fetch course request
+ */
 export interface FetchCourseRequest {
     type: typeof ActionTypes.FETCH_COURSE_REQUEST;
 }
 
+/**
+ * fetch search course request
+ */
 export interface FetchSearchCourseRequest {
     type: typeof ActionTypes.FETCH_SEARCH_COURSE_REQUEST;
     contentSearch: string;
 }
 
+/**
+ * fetch course success
+ */
 export type FetchCourseSuccess = {
     type: typeof ActionTypes.FETCH_COURSE_SUCCESS;
     payload: FetchCourseSuccessPayload;
 };
 
+/**
+ * fetch course failure
+ */
 export type FetchCourseFailure = {
     type: typeof ActionTypes.FETCH_COURSE_FAILURE;
     payload: FetchCourseFailurePayload;
 };
 
+/**
+ * export type course actions
+ */
 export type CourseActions =
     | FetchCourseRequest
     | FetchSearchCourseRequest

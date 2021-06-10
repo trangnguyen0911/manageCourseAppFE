@@ -1,8 +1,19 @@
+/** 
+ * Footer component
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
+ */
 const FooterComponent: React.FC = () => {
     return (
-        // <footer>
-        //     <p className="text-muted">Typescript Demo</p>
-        // </footer>
         <footer className="page-footer font-small mdb-color lighten-3 pt-2 fixed-bottom">
             <div className="container">
                 <div className="row">

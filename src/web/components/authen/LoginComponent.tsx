@@ -1,10 +1,8 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import AuthenticationService from './AuthenticationService.js'
-import { RouteComponentProps } from 'react-router-dom';
-import { Form, Input, Button} from 'antd';
-import { Typography } from 'antd';
-import { message} from 'antd';
+import { useState, useEffect} from 'react'
+import { useDispatch} from "react-redux";
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { LoginRequest } from '../../../core/sercurity/actions'
+import { Form, Input, Button, Typography} from 'antd';
 import * as constant from '../../utils/Constant.js'
 
 const { Title } = Typography;
@@ -12,8 +10,26 @@ const { Title } = Typography;
 interface userprops extends RouteComponentProps {}
 
 const initUser = { name: "", password: ""};
+
+/** 
+ * LoginComponent
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
+ */
 const LoginComponent: React.FC<userprops> = (props) => {
+    const dispatch = useDispatch();
     const [formValue, setFormValue] = useState(initUser);
+    let usernameRef: any = "";
+    let passwordRef: any = "";
 
     const tailLayout = {
         wrapperCol: {
@@ -38,21 +54,43 @@ const LoginComponent: React.FC<userprops> = (props) => {
             sm: { span: 24 },
         },
     };
+
+    /**
+     * focus on first input
+     */
+    useEffect(() => 
+        usernameRef.focus(),
+    [])
       
+    /**
+     * handle loggin request 
+     * @param values 
+     */
     const onFinish = (values: any) => {
-        AuthenticationService
-            .executeJwtAuthenticationService(values.username, values.password)
-            .then((response) => {
-                AuthenticationService.registerSuccessfulLoginForJwt(values.username, response.data.token, response.data.role)
-                props.history.push(`/welcome/${values.username}`)
-            }).catch(() => {
-                message.error("Invalid log in information", 2.5)
-            })
+        dispatch(LoginRequest(values.username, values.password));
     };
 
+    /**
+     * handle onchange event
+     * @param e 
+     */
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormValue({ ...formValue, [name]: value });
+    };
+
+    /**
+     * handle invalid input when submit
+     * @param errorInfo 
+     */
+     const onFinishFailed = (errorInfo: any) => {
+        const firstErrorField: any = errorInfo.errorFields[0].name[0] 
+        
+        if(firstErrorField ===  "username"){
+            usernameRef.focus()
+        } else {
+            passwordRef.focus()
+        }
     };
 
     return (
@@ -61,16 +99,18 @@ const LoginComponent: React.FC<userprops> = (props) => {
             labelAlign='left'
             name="basic"
             initialValues={{ remember: true }}
+            validateMessages={constant.validateMessages}
             onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
         >
             <Title style={{textAlign: 'center'}} level={3}>LOG IN</Title>
             <Form.Item style={{marginTop: '20px'}}
                 label="Username"
                 name="username"
-                rules={[{ required: true, message: 'Please input your username!' },
-                        { max: 50, message : "username is too long"}]}
+                rules={[{ required: true},
+                        { pattern: new RegExp(/^\s*\S.{0,19}\s*$/), message: constant.validateMaxLength("User Name", 20)}]}
             >
-            <Input 
+            <Input ref={input => { usernameRef = input }}
                 value={formValue.name}
                 onChange={onInputChange}
             />
@@ -79,14 +119,14 @@ const LoginComponent: React.FC<userprops> = (props) => {
             <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' },
+                rules={[{ required: true},
                     { max: 20, message: constant.PASSWORD_MAX}]}
             >
-            <Input.Password value={formValue.password} onChange={onInputChange}/>
+            <Input.Password value={formValue.password} onChange={onInputChange} ref={input => { passwordRef = input }}/>
             </Form.Item>
 
-            <Form.Item {...tailLayout} >
-                <Link to="/signup" style={{ color: '#116466', marginBottom: '20px', textDecoration: 'underline' }}>Click here to sign up</Link>
+            <Form.Item {...tailLayout}>
+                <Link to="/signup" style={{ color: '#116466', marginBottom: '20px', textDecoration: 'underline' }} className="sign-up-link">Click here to sign up</Link>
             </Form.Item>
             
             <Form.Item {...tailLayout}>

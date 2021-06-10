@@ -1,44 +1,39 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Row, Col, Card } from 'antd'
-import axios from 'axios';
-import { API_URL } from '../../utils/Constant.js'
 import AuthenticationService from '../authen/AuthenticationService.js'
-import { useDispatch } from "react-redux";
+import { getUserSelector } from '../../../core/user/selector'
+import { getUserByUserNameRequest } from '../../../core/user/actions'
 import { IUser } from '../../../core/user/types'
-import { message } from 'antd';
-import * as constant from '../../utils/Constant';
+
+const username = AuthenticationService.getLoggedInUserName()
 
 /**
- * Add information form, handle add usertodo api
+ * ViewUserInfoComponent
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
  */
-const username = AuthenticationService.getLoggedInUserName()
 const ViewUserInfoComponent: React.FC<IUser> = (props) => {
     const dispatch = useDispatch();
+    const user = useSelector(getUserSelector);
     const history = useHistory();
-    const [user, setUser] = useState<IUser>()
 
-    // call api to view user information
-    const getUserInfor = useCallback(
-        async () => {
-
-            try {
-                const response = await axios.get(
-                    `${API_URL}/users/${username}`
-                )
-                const data = await response.data
-                setUser(data)
-            } catch (error) {
-                message.error(constant.ERR_SYSTEM, 5)
-            }
-        },
-        []
-    )
-
-    // effect side when fetch data
+    /**
+     * get user by user name
+     */
     useEffect(() => {
-        getUserInfor()
-    }, [getUserInfor])
+        dispatch(getUserByUserNameRequest(username));
+    }, []);
 
     return (
         <div className="site-card-border-less-wrapper">
@@ -64,7 +59,7 @@ const ViewUserInfoComponent: React.FC<IUser> = (props) => {
                         <h4>Gender:</h4>
                     </Col>
                     <Col span={16}>
-                        <p>{user?.gender === 0? "Male" : "Female"}</p>
+                        <p>{user?.gender === 0 ? "Male" : "Female"}</p>
                     </Col>
                 </Row>
                 <Row>
@@ -72,7 +67,7 @@ const ViewUserInfoComponent: React.FC<IUser> = (props) => {
                         <h4>Birthdate:</h4>
                     </Col>
                     <Col span={16}>
-                        <p>{user?.birthdate}</p>
+                        <p>{user?.birthdate.toString()}</p>
                     </Col>
                 </Row>
                 <Row>
@@ -85,7 +80,7 @@ const ViewUserInfoComponent: React.FC<IUser> = (props) => {
                 </Row>
                 <Row style={{ marginTop: '30px' }}>
                     <Button htmlType="button" style={{ background: '#116466', color: 'white', marginRight: '2px' }} onClick={() => history.push("/courses/all")}>View all courses</Button>
-                    <Button htmlType="button" style={{ background: 'green', color: 'white'}} onClick={() => history.push(`/users/${user?.username}/edit`) }>Edit</Button>
+                    <Button htmlType="button" style={{ background: 'green', color: 'white' }} onClick={() => history.push(`/users/${user?.username}/edit`)}>Edit</Button>
                 </Row>
             </Card>
 

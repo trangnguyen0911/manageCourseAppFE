@@ -1,3 +1,18 @@
+/**
+ * custom css
+ * 
+ * Version 1.0
+ * 
+ * Date 01-6-2021
+ * 
+ * Copyright
+ * 
+ * Modification Logs: 
+ * DATE        AUTHOR    DESCRIPTION
+ * ----------------------------------- 
+ * 01-6-2021  TrangNTT46    Create
+ */
+
 @import '~antd/dist/antd.css';
 
 .App {
@@ -68,12 +83,6 @@
   margin-left: 240px;
 } 
 
-/* .form-required label:after {
-  content:" *";
-  color: red;
-  margin-bottom: 10px !important;
-}  */
-
 .form-required {
   margin-bottom: 10px !important;
 }
@@ -137,4 +146,16 @@
 .ant-dropdown-button button{
   margin-right: 0;
   width: 100px;
+}
+
+.ant-btn {
+  padding: 2px 10px;
+}
+
+.sign-up-link:hover, .sign-up-link:focus {
+  color: rgb(0, 102, 255) !important;
+}
+
+.log-in-out:hover, log-in-out:focus {
+  color: orange !important;
 }

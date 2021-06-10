@@ -1,17 +1,19 @@
-import { Form, Input, Button, DatePicker} from 'antd'
-import { Typography,  Radio } from 'antd';
-import { useEffect} from 'react'
-import { useDispatch, useSelector } from "react-redux";
-import { addUserRequest } from '../../../core/user/actions'
-import { getErrorSelector } from '../../../core/course/selector'
-import { IUser } from '../../../core/user/types'
-import * as constant from '../../utils/Constant';
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux"
 import moment from 'moment'
+import { Form, Input, Button, DatePicker, Radio, Popconfirm, Typography } from 'antd'
+import { getUserSelector } from '../../../core/user/selector'
+import { getUserByUserNameRequest, editUserRequest } from '../../../core/user/actions'
+import AuthenticationService from '../authen/AuthenticationService.js'
+import { IUser } from '../../../core/user/types'
+import * as constant from '../../utils/Constant'
 
 const { Title } = Typography;
+const username = AuthenticationService.getLoggedInUserName()
 
 /**
- * SignUpComponent
+ * EditUserInfoComponent
  * 
  * Version 1.0
  * 
@@ -24,11 +26,11 @@ const { Title } = Typography;
  * ----------------------------------- 
  * 01-6-2021  TrangNTT46    Create
  */
-const SignUpComponent: React.FC<IUser> = (props) => {
+const EditUserInfoComponent: React.FC<IUser> = (props) => {
     const dispatch = useDispatch();
-    const error = useSelector(getErrorSelector);
+    const user = useSelector(getUserSelector);
+    const history = useHistory();
     const [form] = Form.useForm();
-    let usernameRef: any = null;
     let fullnameRef: any = null;
     let emailRef: any = null;
     let confirmRef: any = null;
@@ -60,34 +62,45 @@ const SignUpComponent: React.FC<IUser> = (props) => {
         },
     };
 
-    /**
-     * focus on first input
-     */
-    useEffect(() => 
-        usernameRef.focus(),
-    [])
-
     const config = {
-        rules: [{ type: 'object' as const, required: true }],
+        rules: [{ type: 'object' as const, required: true}],
     };
 
     /**
-     * handle sign up after valid input
+     * focus on first input
+     * check whether course exist or not
+     */
+    useEffect(() => {
+        fullnameRef.focus()
+        dispatch(getUserByUserNameRequest(username));
+        form.setFieldsValue({
+            id: user.studentID,
+            username: user.username,
+            fullname: user.fullname,
+            birthdate: moment(user.birthdate),
+            status: 1,
+            gender: user.gender,
+            email: user.email,
+        })
+    }, []);
+
+    /**
+     * handle edit user
      * @param values 
      */
     const onFinish = (values: any) => {
-        const user: IUser = {
-            username: values.username.trim(),
+        const newUser: IUser = {
+            username: username,
             fullname: values.fullname.trim(),
-            birthdate: values['birthdate'].format('YYYY-MM-DD'),
+            birthdate: values.birthdate,
             status: 1,
-            gender: +values.gender,
-            email: values.email.trim(),
-            password: values.password.trim(),
+            gender: values.gender,
+            email: values.email,
+            password: "abc",
         }
-        dispatch(addUserRequest(user));
+        dispatch(editUserRequest(newUser));
     }
-   
+
     /**
      * handle invalid input when submit
      * @param errorInfo 
@@ -95,9 +108,7 @@ const SignUpComponent: React.FC<IUser> = (props) => {
      const onFinishFailed = (errorInfo: any) => {
         const firstErrorField: any = errorInfo.errorFields[0].name[0] 
         
-        if(firstErrorField ===  "username"){
-            usernameRef.focus()
-        } else if (firstErrorField === "fullname") {
+        if (firstErrorField === "fullname") {
             fullnameRef.focus()
         } else if (firstErrorField === "email") {
             emailRef.focus()
@@ -111,46 +122,41 @@ const SignUpComponent: React.FC<IUser> = (props) => {
             genderRef.focus()
         }
     };
-    
+
     return (
-        error ?
-            <>
-                message.error(constant.ERR_SYSTEM, 5)
-            </> :
-        (<Form className= "form-style"
+        <Form className="form-style"
             {...formItemLayout}
+            labelAlign="left"
             form={form}
-            labelAlign='left'
             name="basic"
+            validateMessages={constant.validateMessages}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
-            validateMessages={constant.validateMessages}
         >
-            <Title style={{ textAlign: 'center' }} level={3}>SIGN UP INFORMATION</Title>
+            <Title style={{ textAlign: 'center' }} level={3}>EDIT PROFILE</Title>
             <Form.Item style={{ marginTop: '20px' }} className="form-required"
-                label="User Name"
+                labelAlign='left'
+                label="User name"
                 name="username"
                 rules={[{ required: true},
-                { pattern: new RegExp(/^\s*\S.{0,19}\s*$/), message: constant.validateMaxLength("User Name", 20)}]}
+                { pattern: new RegExp(/^\s*\S.{0,19}\s*$/), message: constant.validateMaxLength("User Name", 20) }]}
             >
-                <Input ref={input => { usernameRef = input }}/>
+                <Input disabled/>
             </Form.Item>
 
             <Form.Item className="form-required"
-                label="Full Name"
+                label="Full name"
                 name="fullname"
                 rules={[{ required: true},
                 { pattern: new RegExp(/^\s*\S.{0,49}\s*$/), message: constant.validateMaxLength("Full Name", 50) }]}
             >
-                <Input ref={input => { fullnameRef = input }} />
+                <Input ref={input => { fullnameRef = input }}/>
             </Form.Item>
 
             <Form.Item className="form-required"
                 label="Email"
                 name="email"
-                rules={[{ required: true},
-                { type: 'email'},
-                { max: 50, message: constant.validateMaxLength("Email", 50)}]}
+                rules={[{ required: true }, { type: 'email'}, { max: 50, message: constant.validateMaxLength("Email", 50)}]}
             >
                 <Input ref={input => { emailRef = input }} />
             </Form.Item>
@@ -174,45 +180,15 @@ const SignUpComponent: React.FC<IUser> = (props) => {
                 </Radio.Group>
             </Form.Item>
 
-            <Form.Item className="form-required"
-                label="Password"
-                name="password"
-                rules={[{ required: true},
-                        { pattern: new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/), message: constant.PASSWORD},
-                        { max: 20, message: constant.PASSWORD_MAX}]}
-            >
-                <Input.Password ref={input => { passwordRef = input }} />
-            </Form.Item>
-
-            <Form.Item
-                name="confirm"
-                label="Confirm Password"
-                dependencies={['password']}
-                hasFeedback
-                rules={[
-                {
-                    required: true,
-                    message: constant.PASSWORD_CONFIRM,
-                },
-                ({ getFieldValue }) => ({
-                    validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
-                        return Promise.resolve();
-                    }
-                    return Promise.reject(new Error(constant.PASSWORD_CONFIRM_MATCH));
-                    },
-                }),
-                ]}
-            >
-                <Input.Password ref={input => { confirmRef = input }} />
-            </Form.Item>
-
             <Form.Item {...tailFormItemLayout} style={{marginTop: '20px'}}>
-                <Button type="primary" htmlType="submit">Submit</Button>
-                <Button htmlType="reset" className="btn-reset">Clear</Button>
+                <Popconfirm placement="top" title={constant.backMessage} onConfirm={ () =>  history.push("/users/profile")} okText="Yes" cancelText="No">
+                    <Button htmlType="button" style={{ background: '#116466', color: 'white', marginRight:'2px' }} >Back</Button>
+                </Popconfirm>
+                <Button type="primary" htmlType="submit">Edit</Button>
+                <Button htmlType="button" onClick ={() => window.location.reload()} className="btn-reset">Reset</Button>
             </Form.Item>
-        </Form>)
+        </Form>
     )
 }
 
-export default SignUpComponent
+export default EditUserInfoComponent
